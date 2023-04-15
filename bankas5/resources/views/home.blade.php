@@ -30,7 +30,7 @@
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Maximum amount in one account : <span>{{$valuesMax}}</span>
+                            Maximum amount : <span>{{$valuesMax}}</span>
                         </div>
                     </div>
                 </div>
@@ -42,20 +42,20 @@
                     </div>
                 </div>
 
-                {{-- <div class="card-body">
+                <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Amount of accounts with 0 balances : <span>{{$account0}}</span>
+                            Accounts with 0 balances : <span>{{$account0}}</span>
                         </div>
                     </div>
-                </div>
+                </div> 
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
                             Accounts with minus balance : <span>{{$accountMinus}}</span>
                         </div>
                     </div>
-                </div> --}}
+                </div> 
             </div>
         </div>
     </div>
