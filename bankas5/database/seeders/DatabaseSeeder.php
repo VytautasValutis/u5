@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'briedis@gmail.com',
             'password' => Hash::make('123'),
         ]);
-        $faker = Faker::create();
+        $faker = Faker::create('lt_LT');
         foreach(range(1, 50) as $_) {
             DB::table('clients')->insert([
                 'name' => $faker->firstName,
