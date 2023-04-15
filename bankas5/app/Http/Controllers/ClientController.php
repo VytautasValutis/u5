@@ -10,7 +10,13 @@ class ClientController extends Controller
 {
     public function index()
     {
-        //
+        $clients = Client::where('id', '>', '0');
+        $clients = $clients->orderBy('surname');
+        $clients = $clients->paginate(7)->withQueryString();
+
+        return view('clients.index', [
+            'clients' => $clients
+        ]);
     }
 
     public function create()
