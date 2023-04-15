@@ -6,3 +6,19 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+.text-line {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+
+    .text-info {
+        display: flex;
+        justify-content: space-around;
+        width: 700px;
+        span {
+            width: 200px;
+        }
+    }
+}
