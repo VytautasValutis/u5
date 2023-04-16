@@ -16,9 +16,23 @@
                 @forelse($clients as $v)
                 <tr>
                     <th>{{$v->pid}}</th>
-                    <td>{{$v->name}}</td>
+                    <td>
+                        {{$v->name}}
+                        @if($v->clientAccountNum)
+                            @foreach($clientAccounts as $acc)
+                                @if($acc->client_id == $v->id)
+                                    <div>{{$acc->iban}}
+                                    <span class="order-list">&#x20AC; {{number_format($acc->value, 2, '.', ' ')}}</span>
+                                    </div>
+                                @endif
+                            @endforeach
+                        @endif
+                    </td>
                     <td>{{$v->surname}}</td>
-                    <td><b>&#x20AC; {{$v->clientSum}}</b></td>
+                    <td><b> @if($v->clientAccountNum)
+                            &#x20AC; {{$v->clientSum}}
+                            @endif
+                        </b></td>
                     <td>
                         <a href="" class="btn btn-outline-success">Edit client</a>
                     </td>

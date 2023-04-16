@@ -13,17 +13,21 @@ class ClientController extends Controller
     {
         $clients = Client::where('id', '>', '0');
         $clients = $clients->orderBy('surname');
-        $clients = $clients->paginate(7)->withQueryString();
+        $clients = $clients->paginate(5)->withQueryString();
         foreach($clients as $c) {
             $clientAccounts = Account::where('client_id', $c->id);
             $clientAccounts->get();
             $clientSum = $clientAccounts->sum('value');
+            $clientAccountNum = $clientAccounts->count();
             $c->clientSum = number_format($clientSum, 2, '.', ' ');
+            $c->clientAccountNum = $clientAccountNum;
             // $c->all();
         }
+        $clientAccounts = Account::all();
 
         return view('clients.index', [
             'clients' => $clients,
+            'clientAccounts' => $clientAccounts,
         ]);
     }
 
