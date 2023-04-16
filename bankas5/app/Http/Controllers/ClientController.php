@@ -112,7 +112,7 @@ class ClientController extends Controller
         return true;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $clients = Client::where('id', '>', '0');
         $clients = $clients->orderBy('surname');
@@ -127,10 +127,16 @@ class ClientController extends Controller
             // $c->all();
         }
         $clientAccounts = Account::all();
+        $page = $request->page ?? 1;
+
+        $request->session()->put('last-client-view', [
+            'page' => $page,
+        ]);
 
         return view('clients.index', [
             'clients' => $clients,
             'clientAccounts' => $clientAccounts,
+            'page' => $page,
         ]);
     }
 
@@ -182,12 +188,35 @@ class ClientController extends Controller
 
     public function edit(Client $client)
     {
-        //
+        return view('clients.edit', [
+            'client' => $client
+        ]);
     }
 
     public function update(Request $request, Client $client)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:3',
+            'surname' => 'required|min:3',
+        ]);
+
+        if($validator->fails()){
+            $request->flash();
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ;
+        }
+
+        $client->name = $request->name;
+        $client->surname = $request->surname;
+        $client->save();
+        return redirect()
+            ->route('clients-index', $request->session()->get('last-client-view', []))
+            ->With('ok', 'The client ' . $request->name . ' ' . $request->surname . ' was updated')
+            ->with('light-up', $client->id)
+            ;
+
     }
 
     public function destroy(Request $request, Client $client)

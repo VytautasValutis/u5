@@ -29,14 +29,20 @@
                         @endforeach
                         @endif
                     </td>
-                    <td>{{$v->name}}</td>
-                    <td>{{$v->surname}}</td>
+                    <td>
+                        <div class="@if(Session::has('light-up') && Session::get('light-up') == $v->id) active @endif">{{$v->name}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="@if(Session::has('light-up') && Session::get('light-up') == $v->id) active @endif">{{$v->surname}}
+                        </div>
+                    </td>
                     <td><b> @if($v->clientAccountNum)
                             &#x20AC; {{$v->clientSum}}
                             @endif
                         </b></td>
                     <td>
-                        <a href="" class="btn btn-outline-success">Edit client</a>
+                        <a href="{{route('clients-edit', $v)}}" class="btn btn-outline-success">Edit client</a>
                     </td>
                     <td>
                         <a href="" class="btn btn-outline-success">Add funds</a>
