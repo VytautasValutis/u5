@@ -9,35 +9,35 @@
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Number of clients : <span>{{$clientsAll}}</span>
+                            Number of clients : <span># {{$clientsAll}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Number of account : <span>{{$accountsAll}}</span>
+                            Number of account : <span># {{$accountsAll}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            The total amount held : <span>{{$valuesTotal}}</span>
+                            The total amount held : <span>&#x20AC; {{$valuesTotal}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Maximum amount : <span>{{$valuesMax}}</span>
+                            Maximum amount : <span>&#x20AC; {{$valuesMax}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Average bill amount : <span>{{$valuesAvg}}</span>
+                            Average bill amount : <span>&#x20AC; {{$valuesAvg}}</span>
                         </div>
                     </div>
                 </div>
@@ -45,14 +45,14 @@
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Accounts with 0 balances : <span>{{$account0}}</span>
+                            Accounts with 0 balances : <span># {{$account0}}</span>
                         </div>
                     </div>
                 </div> 
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Accounts with minus balance : <span>{{$accountMinus}}</span>
+                            Accounts with minus balance : <span># {{$accountMinus}}</span>
                         </div>
                     </div>
                 </div> 

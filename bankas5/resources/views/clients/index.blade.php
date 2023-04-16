@@ -18,7 +18,7 @@
                     <th>{{$v->pid}}</th>
                     <td>{{$v->name}}</td>
                     <td>{{$v->surname}}</td>
-                    <td><b>0.00</b></td>
+                    <td><b>&#x20AC; {{$v->clientSum}}</b></td>
                     <td>
                         <a href="" class="btn btn-outline-success">Edit client</a>
                     </td>
