@@ -177,7 +177,7 @@ class ClientController extends Controller
         $client->save();
         return redirect()
             ->route('clients-index')
-            ->with('ok', 'Client :' . $request->name . ' ' . $request->surname . 'was created');
+            ->with('ok', 'Client :' . $request->name . ' ' . $request->surname . ' was created');
 
     }
 
@@ -188,8 +188,12 @@ class ClientController extends Controller
 
     public function edit(Client $client)
     {
+        $clientAccounts = Account::where('client_id', $client->id);
+        $clientAccounts = $clientAccounts->get();
+
         return view('clients.edit', [
-            'client' => $client
+            'client' => $client,
+            'accounts' => $clientAccounts,
         ]);
     }
 
