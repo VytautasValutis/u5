@@ -5,9 +5,113 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Validator as VV;
 
 class ClientController extends Controller
 {
+    private function accNr() : string
+    {
+        $sask_nr = 'LT3306660' . sprintf('%1$011d', time());
+        return $sask_nr;
+    }
+
+    private function putRandCode() : string
+    {
+        $met = rand(1901,2007);
+        $men = rand(1, 12);
+        $nr = rand(1, 999);
+        if(in_array($men,[1,3,5,7,8,10,12])) {
+            $dien = rand(1, 31);
+        };
+        if(in_array($men,[4,6,9,11])) {
+            $dien = rand(1, 30);
+        };
+        if($men == 2) {
+            if($met % 4 === 0) {
+                $dien = rand(1, 29);
+            } else {
+                $dien = rand(1, 28);
+            }
+        }
+        if($met > 1999) {
+            $ak[] = rand(5, 6);
+        } else {
+            $ak[] = rand(3, 4);
+        }
+        $ak[] = floor(($met % 100) / 10);
+        $ak[] = $met % 10;
+        $ak[] = floor($men / 10);
+        $ak[] = $men % 10;
+        $ak[] = floor($dien / 10);
+        $ak[] = $dien % 10;
+        $ak[] = floor($nr / 100);
+        $ak[] = floor(($nr % 100) / 10);
+        $ak[] = $nr % 10;
+        $ks = $ak[0] + $ak[1] * 2 + $ak[2] * 3 +
+            $ak[3] * 4 + $ak[4] * 5 + $ak[5] * 6 +
+            $ak[6] * 7 + $ak[7] * 8 + $ak[8] * 9 + 
+            $ak[9];
+        $kss = $ks % 11;    
+        if($kss === 10) {
+            $ks = $ak[0] * 3 + $ak[1] * 4 + $ak[2] * 5 +
+                $ak[3] * 6 + $ak[4] * 7 + $ak[5] * 8 +
+                $ak[6] * 9 + $ak[7] + $ak[8] + $ak[9];
+            $kss = $ks % 11;
+            if($kss === 10) $kss = 0;
+        }        
+        $ak[] = $kss;
+    
+        return implode('', $ak);
+    }
+
+    private function testPersCode(string $code) : bool
+    {
+        function ak_tst($ak1, $met, $men, $dien, $nr) {
+            $ak[] = $ak1;
+            $ak[] = floor(($met % 100) / 10);
+            $ak[] = $met % 10;
+            $ak[] = floor($men / 10);
+            $ak[] = $men % 10;
+            $ak[] = floor($dien / 10);
+            $ak[] = $dien % 10;
+            $ak[] = floor($nr / 100);
+            $ak[] = floor(($nr % 100) / 10);
+            $ak[] = $nr % 10;
+            $ks = $ak[0] + $ak[1] * 2 + $ak[2] * 3 +
+                $ak[3] * 4 + $ak[4] * 5 + $ak[5] * 6 +
+                $ak[6] * 7 + $ak[7] * 8 + $ak[8] * 9 + 
+                $ak[9];
+            $kss = $ks % 11;    
+            if($kss === 10) {
+                $ks = $ak[0] * 3 + $ak[1] * 4 + $ak[2] * 5 +
+                    $ak[3] * 6 + $ak[4] * 7 + $ak[5] * 8 +
+                    $ak[6] * 9 + $ak[7] + $ak[8] + $ak[9];
+                $kss = $ks % 11;
+                if($kss === 10) $kss = 0;
+            }        
+            $ak[] = $kss;
+        
+            return implode('', $ak);
+        }
+
+        $ak1 = (int) substr($code,0,1);
+        if($ak1 < 3 || $ak1 > 6) return false;
+        if($ak1 == 3 || $ak1 == 4) $met = (int)'19'.substr($code,1,2); 
+        if($ak1 == 5 || $ak1 == 6) $met = (int)'20'.substr($code,1,2); 
+        if($met > 2007) return false;
+        $men = (int) substr($code,3,2);
+        if($men > 12 || $men < 1) return false;
+        $dien = (int) substr($code,5,2);
+        if($dien > 31 || $dien < 1) return false;
+        if($dien == 31 && in_array($men,[4,6,9,11])) return false;
+        if($dien == 30 && $men == 2) return false;
+        if($dien == 29 && $men == 2 && $met % 4 != 0) return false;
+        $sk = (int) substr($code,7,3);
+        if(ak_tst($ak1, (int) $met, $men, $dien, $sk) != $code) return false;
+        return true;
+    }
+
     public function index()
     {
         $clients = Client::where('id', '>', '0');
@@ -32,12 +136,43 @@ class ClientController extends Controller
 
     public function create()
     {
-        //
+        session(['pid' => self::putRandCode()]);
+
+        return view('clients.create');
     }
 
-    public function store(StoreClientRequest $request)
+    public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:3',
+            'surname' => 'required|min:3',
+            // 'pid' => 'unique:App\Models\Client,pid',
+            'pid' => 'required',
+        ]);
+
+        $validator->after(function(VV $validator) {
+            $temp = $validator->safe()->pid;
+            if(!self::testPersCode($temp)) {
+                $validator->errors()->add('Error', 'Wrong client PID');
+            }
+        });
+
+        if($validator->fails()) {
+            $request->flash();
+            return redirect()
+                ->back()
+                ->withErrors($validator);
+        }
+
+        $client = new Client;
+        $client->name = $request->name;
+        $client->surname = $request->surname;
+        $client->pid = $request->pid;
+        $client->save();
+        return redirect()
+            ->route('clients-index')
+            ->with('ok', 'Client :' . $request->name . ' ' . $request->surname . 'was created');
+
     }
 
     public function show(Client $client)
@@ -50,7 +185,7 @@ class ClientController extends Controller
         //
     }
 
-    public function update(UpdateClientRequest $request, Client $client)
+    public function update(Request $request, Client $client)
     {
         //
     }
