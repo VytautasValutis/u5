@@ -7,6 +7,7 @@
             <thead>
                 <tr>
                     <th scope="col">PID</th>
+                    <th scope="col"></th>
                     <th scope="col">Name</th>
                     <th scope="col">Surname</th>
                     <th scope="col">Values</th>
@@ -17,17 +18,18 @@
                 <tr>
                     <th>{{$v->pid}}</th>
                     <td>
-                        {{$v->name}}
+                        <div> Accounts </div>
                         @if($v->clientAccountNum)
-                            @foreach($clientAccounts as $acc)
-                                @if($acc->client_id == $v->id)
-                                    <div>{{$acc->iban}}
-                                    <span class="order-list">&#x20AC; {{number_format($acc->value, 2, '.', ' ')}}</span>
-                                    </div>
-                                @endif
-                            @endforeach
+                        @foreach($clientAccounts as $acc)
+                        @if($acc->client_id == $v->id)
+                        <div>{{$acc->iban}}
+                            <span class="order-list">&#x20AC; {{number_format($acc->value, 2, '.', ' ')}}</span>
+                        </div>
+                        @endif
+                        @endforeach
                         @endif
                     </td>
+                    <td>{{$v->name}}</td>
                     <td>{{$v->surname}}</td>
                     <td><b> @if($v->clientAccountNum)
                             &#x20AC; {{$v->clientSum}}
@@ -43,7 +45,8 @@
                         <a href="" class="btn btn-outline-primary">Deduct funds</a>
                     </td>
                     <td>
-                        <form action="" method="post">
+                        <form action="{{route('clients-delete', $v)}}" method="post">
+                            <input type="hidden" value="{{$v->clientSum}}" name="clientSum">
                             <button type="submit" class="btn btn-outline-danger">Remove client</button>
                             @csrf
                             @method('delete')

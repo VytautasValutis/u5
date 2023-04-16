@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Account;
-use App\Http\Requests\StoreClientRequest;
-use App\Http\Requests\UpdateClientRequest;
+use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
@@ -56,8 +55,17 @@ class ClientController extends Controller
         //
     }
 
-    public function destroy(Client $client)
+    public function destroy(Request $request, Client $client)
     {
-        //
+        if($request->clientSum > 0) {
+            return redirect()
+            ->back()
+            ->withErrors('Client: ' . $client->name . ' ' . $client->surname .' has values. Cannot be removed');
+        }
+
+        $client->delete();
+        return redirect()
+            ->route('clients-index')
+            ->with('info', 'Client ' . $client->name . ' ' . $client->surname . ' removed');
     }
 }

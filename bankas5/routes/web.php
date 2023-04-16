@@ -25,4 +25,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::prefix('clients')->name('clients-')->group(function() {
     Route::get('/', [CL::class, 'index'])->name('index');
+    Route::delete('/delete/{client}', [CL::class, 'destroy'])->name('delete');
 });
