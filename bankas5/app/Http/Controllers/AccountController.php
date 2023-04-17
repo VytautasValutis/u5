@@ -3,64 +3,62 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
-use App\Http\Requests\StoreAccountRequest;
-use App\Http\Requests\UpdateAccountRequest;
+use App\Models\Client;
+use Illuminate\Http\Request;
+
 
 class AccountController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAccountRequest $request)
+    public function store(Request $request)
     {
-        //
+        Account::create([
+            'iban' => 'LT3306660' . sprintf('%1$011d', time()),
+            'value' => 0.00,
+            'client_id' => $request->clientId,
+        ]);
+
+        return redirect()
+            ->back()
+            ->With('ok', 'The new account created.')
+            ;
+
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Account $account)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Account $account)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateAccountRequest $request, Account $account)
+    public function update(Request $request, Account $account)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Account $account)
     {
-        //
+        if($account->value != 0) {
+            return redirect()->back()
+                ->withErrors('Account num.:' . $account->iban . ' not zero. Cannot be removed')
+                ;
+        }
+        $account->delete();
+        return redirect()->back()
+            ->with('info', 'Account ' . $account->iban . ' deleted');
+
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('iban', 20);
             $table->decimal('value', 10, 2);
             $table->unsignedBigInteger('client_id');
-            $table->foreign('client_id')->references('id')->on('clients');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->timestamps();
         });
     }

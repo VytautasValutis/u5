@@ -25,25 +25,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $clientsAll = Client::all()->count();
-        $accountsAll = Account::all()->count();
-        $valuesTot = Account::all()->sum('value');
-        $valuesTotal = number_format($valuesTot, 2, '.', ' ');
-        $valuesMax = number_format(Account::all()->max('value'), 2, '.', ' ');
-        $valuesAvg = number_format($valuesTot / $accountsAll, 2, '.', ' ');
-        $accounts = Account::where('value', 0);
-        $account0 = $accounts->count();
-        $accounts = Account::where('value', '<', 0);
-        $accountMinus = $accounts->count();
+        $clients =  Client::all();
+        $accounts =  Account::all();
 
         return view('home', [
-            'clientsAll' => $clientsAll,
-            'accountsAll' => $accountsAll,
-            'valuesTotal' => $valuesTotal,
-            'valuesMax' => $valuesMax,
-            'valuesAvg' => $valuesAvg,
-            'account0' => $account0,
-            'accountMinus' => $accountMinus,
+            'clients' => $clients,
+            'accounts' => $accounts,
             ]);
     }
 }
