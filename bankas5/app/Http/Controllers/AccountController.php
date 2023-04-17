@@ -51,6 +51,14 @@ class AccountController extends Controller
 
     public function destroy(Account $account)
     {
-        //
+        if($account->value != 0) {
+            return redirect()->back()
+                ->withErrors('Account num.:' . $account->iban . ' not zero. Cannot be removed')
+                ;
+        }
+        $account->delete();
+        return redirect()->back()
+            ->with('info', 'Account ' . $account->iban . ' deleted');
+
     }
 }

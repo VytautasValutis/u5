@@ -33,7 +33,7 @@
                         <div class="container">
                             <div class="row justify-content-left">
                                 <div class="col-3 m-1">
-                                    <form action="" method="post">
+                                    <form action="{{route('accounts-delete', $acc)}}" method="post">
                                         <button type="submit" class="btn btn-outline-danger">Remove account</button>
                                         @csrf
                                         @method('delete')
