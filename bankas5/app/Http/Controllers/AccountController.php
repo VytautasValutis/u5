@@ -19,17 +19,17 @@ class AccountController extends Controller
         //
     }
 
-    public function store(Request $request, Client $client)
+    public function store(Request $request)
     {
         Account::create([
             'iban' => 'LT3306660' . sprintf('%1$011d', time()),
             'value' => 0.00,
-            'client_id' => $client->id,
+            'client_id' => $request->clientId,
         ]);
 
         return redirect()
             ->back()
-            ->With('ok', 'The new account created. Client : ' . $client->name . ' ' . $client->surname)
+            ->With('ok', 'The new account created.')
             ;
 
     }

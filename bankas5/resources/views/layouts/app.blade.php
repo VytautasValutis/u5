@@ -47,6 +47,17 @@
                                 </a>
                             </div>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle text-primary" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                Accounts menu
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="">
+                                {{-- <a class="dropdown-item" href="{{ route('accounts-create') }}"> --}}
+                                    New account
+                                </a>
+                            </div>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -88,7 +99,7 @@
         </nav>
         @include('layouts.messages')
         @include('layouts.errors')
-        <main class="py-4">
+        <main class="py-1">
             @yield('content')
         </main>
     </div>

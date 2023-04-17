@@ -4,13 +4,26 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-8 ">
-            <div class="card mt-5">
+            <div class="card mt-3">
                 <div class="card-header">
-                    <h1>Edit client
-                        <span class="edit-header-span">PID {{$client->pid}}
-                            <a href="{{route('accounts-store', $client)}}" class="btn btn-primary ms-4">Add new account</a>
-                        </span>
-                    </h1>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4">
+                                <h1>Edit client</h1>
+                            </div>
+                            <div class="col-4">
+                                <div class="mt-3">PID {{$client->pid}}</div>
+                            </div>
+                            <div class="col-4 mt-1">
+                                <form action="{{route('accounts-store')}}" method="post">
+                                    <input type="hidden" value="{{$client->id}}" name="clientId">
+                                    <button type="submit" class="btn btn-primary ms-4">Add new account</button>
+                                    @csrf
+                                    @method('put')
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <form action="{{route('clients-update', $client)}}" method="post">
@@ -24,9 +37,9 @@
                             <input type="text" class="form-control" name="surname" value="{{old('surname', $client->surname)}}">
                             <div class="form-text">Client surname: min 3 characters</div>
                         </div>
-                            <button type="submit" class="btn btn-primary ms-4">Submit</button>
-                    @csrf
-                    @method('put')
+                        <button type="submit" class="btn btn-primary ms-4">Submit</button>
+                        @csrf
+                        @method('put')
                     </form>
                     <div class="mb-3">
                         @forelse($accounts as $acc)
