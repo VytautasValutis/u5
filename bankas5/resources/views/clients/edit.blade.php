@@ -8,7 +8,7 @@
                 <div class="card-header">
                     <h1>Edit client
                         <span class="edit-header-span">PID {{$client->pid}}
-                            <a href="" class="btn btn-primary ms-4">Add new account</a>
+                            <a href="{{route('accounts-store', $client)}}" class="btn btn-primary ms-4">Add new account</a>
                         </span>
                     </h1>
                 </div>
@@ -39,7 +39,7 @@
                                         @method('delete')
                                     </form>
                                 </div>
-                                <div class="col-3 m-2">
+                                <div class="col-4 m-2">
                                     {{$acc->iban}}
                                 </div>
                                 <div class="col-4 m-2">

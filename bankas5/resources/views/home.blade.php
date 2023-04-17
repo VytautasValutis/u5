@@ -9,35 +9,35 @@
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Number of clients : <span># {{$clientsAll}}</span>
+                            Number of clients : <span># {{$clients->count()}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Number of account : <span># {{$accountsAll}}</span>
+                            Number of account : <span># {{$accounts->count()}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            The total amount held : <span>&#x20AC; {{$valuesTotal}}</span>
+                            The total amount held : <span>&#x20AC; {{number_format($accounts->sum('value'), 2, '.', ' ')}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Maximum amount : <span>&#x20AC; {{$valuesMax}}</span>
+                            Maximum amount : <span>&#x20AC; {{number_format($accounts->max('value'), 2, '.', ' ')}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Average bill amount : <span>&#x20AC; {{$valuesAvg}}</span>
+                            Average bill amount : <span>&#x20AC; {{number_format($accounts->avg('value'), 2, '.', ' ')}}</span>
                         </div>
                     </div>
                 </div>
@@ -45,14 +45,14 @@
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Accounts with 0 balances : <span># {{$account0}}</span>
+                            Accounts with 0 balances : <span># {{$accounts->where('value', 0)->count(), 2, '.', ' '}}</span>
                         </div>
                     </div>
                 </div> 
                 <div class="card-body">
                     <div class="text-line">
                         <div class="text-info">
-                            Accounts with minus balance : <span># {{$accountMinus}}</span>
+                            Accounts with minus balance : <span># {{$accounts->where('value', '<', 0)->count(), 2, '.', ' '}}</span>
                         </div>
                     </div>
                 </div> 
