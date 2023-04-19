@@ -10,11 +10,6 @@ use Illuminate\Validation\Validator as VV;
 
 class ClientController extends Controller
 {
-    private function accNr() : string
-    {
-        $sask_nr = 'LT3306660' . sprintf('%1$011d', time());
-        return $sask_nr;
-    }
 
     private function putRandCode() : string
     {

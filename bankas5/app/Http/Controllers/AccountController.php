@@ -16,20 +16,25 @@ class AccountController extends Controller
 
     public function create()
     {
-        //
+        $clients = Client::all()->sortBy('surname');
+        return view('accounts.create', [
+            'clients' => $clients,
+            'iban' => 'LT3306660' . sprintf('%1$011d', time()),
+        ]);
     }
 
     public function store(Request $request)
     {
+        $iban = $request->iban ?? 'LT3306660' . sprintf('%1$011d', time());
         Account::create([
-            'iban' => 'LT3306660' . sprintf('%1$011d', time()),
+            'iban' => $iban,
             'value' => 0.00,
-            'client_id' => $request->clientId,
+            'client_id' => $request->client_id,
         ]);
-
+        $client = Client::where('id', $request->client_id)->get();
         return redirect()
-            ->back()
-            ->With('ok', 'The new account created.')
+            ->route('clients-index')
+            ->With('ok', 'The new account: ' . $iban . ' was created. Client: ' . $client->first()->surname . ' ' . $client->first()->name)
             ;
 
     }
