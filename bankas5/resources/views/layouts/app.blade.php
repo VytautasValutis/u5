@@ -53,7 +53,7 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('accounts-create') }}">
-                                {{-- <a class="dropdown-item" href="{{ route('accounts-create') }}"> --}}
+                                    {{-- <a class="dropdown-item" href="{{ route('accounts-create') }}"> --}}
                                     New account
                                 </a>
                             </div>
@@ -99,6 +99,7 @@
         </nav>
         @include('layouts.messages')
         @include('layouts.errors')
+        @include('layouts.oper')
         <main class="py-1">
             @yield('content')
         </main>

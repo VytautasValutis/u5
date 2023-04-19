@@ -61,8 +61,13 @@ class AccountController extends Controller
     {
         $account  = Account::where('id', $request->account_id)->get()->first();
         if($request->oper == "Add") {
+            if((int) $request->addValue > 1000) {
+                return redirect()
+                ->back()
+                ->with('oper-modal', ['The operation value exedds 1000. Do Your really perform operation?']);
+            };
             $account->value += (int) $request->addValue;
-            $msg = ' added 0xE2 ' . $request->addValue;
+            $msg = ' added ' . $request->addValue;
         } else {
             // if($request->remValue > $client->value) {
             //     $request->flash();
