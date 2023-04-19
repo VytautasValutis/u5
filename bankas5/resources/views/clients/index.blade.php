@@ -45,7 +45,7 @@
                         <a href="{{route('clients-edit', $v)}}" class="btn btn-outline-success">Edit client</a>
                     </td>
                     <td>
-                        <a href="" class="btn btn-outline-success">Add funds</a>
+                        <a href="{{route('accounts-edit', ['Add', $v])}}" class="btn btn-outline-success">Add funds</a>
                     </td>
                     <td>
                         <a href="" class="btn btn-outline-primary">Deduct funds</a>

@@ -41,17 +41,42 @@ class AccountController extends Controller
 
     public function show(Account $account)
     {
-        //
+            //
     }
 
-    public function edit(Account $account)
+    public function edit($oper, Client $client)
     {
-        //
+        $accounts = Account::where('client_id', $client->id)->get();
+        if($oper == 'Add') return view('accounts.addFunds', [
+            'client' => $client,
+            'accounts' => $accounts,
+        ]);
+        if($oper == 'Rem') return view('accounts.remVal', [
+            'client' => $client
+        ]);
+        return redirect()->back();
     }
 
-    public function update(Request $request, Account $account)
+    public function update(Request $request)
     {
-        //
+        $account  = Account::where('id', $request->account_id)->get()->first();
+        if($request->oper == "Add") {
+            $account->value += (int) $request->addValue;
+            $msg = ' added 0xE2 ' . $request->addValue;
+        } else {
+            // if($request->remValue > $client->value) {
+            //     $request->flash();
+            //     return redirect()
+            //         ->back()
+            //         ->withErrors('Insufficient funds to perform the operation');
+            // }
+            // $client->value -= $request->remValue;
+            // $msg = ' subtract ' . $request->remValue;
+        }
+        $account->save();
+        return redirect()
+            ->back()
+            ->with('ok', 'Client acc.num.: ' . $account->iban . $msg . ' values');
     }
 
     public function destroy(Account $account)
