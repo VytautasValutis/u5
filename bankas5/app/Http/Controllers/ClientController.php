@@ -168,6 +168,7 @@ class ClientController extends Controller
         $client->name = $request->name;
         $client->surname = $request->surname;
         $client->pid = $request->pid;
+        $client->accCount = 0;
         $client->save();
         return redirect()
             ->route('clients-index')
@@ -217,12 +218,15 @@ class ClientController extends Controller
 
     }
 
-    public function destroy(Request $request, Client $client)
+    public function destroy(Client $client)
     {
-        if($request->clientSum > 0) {
-            return redirect()
-            ->back()
-            ->withErrors('Client: ' . $client->name . ' ' . $client->surname .' has values. Cannot be removed');
+        $clientAccounts = Account::where('client_id', $client->id)->get();
+        foreach($clientAccounts as $clientAccount) {
+            if($clientAccount->value != 0) {
+                return redirect()
+                ->back()
+                ->withErrors('Client: ' . $client->name . ' ' . $client->surname .' has values. Cannot be removed');
+            }
         }
 
         $client->delete();
