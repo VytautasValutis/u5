@@ -62,37 +62,37 @@ class AccountController extends Controller
     {
         $account  = Account::where('id', $request->account_id)->get()->first();
         if($request->oper == "Add") {
-            if(!$request->confirm && (int) $request->addValue > 1000) {
+            if(!$request->confirm && (int) $request->value > 1000) {
                 return redirect()
                 ->back()
                 ->with('oper-modal', [
                     'The operation value exeds 1000. Do Your really perform operation?',
-                    $account->id,
-                    $request->addValue,
+                    $request->account_id,
+                    $request->value,
                     "Add",
                 ]);
             };
-            $account->value += (int) $request->addValue;
-            $msg = ' added ' . $request->addValue;
+            $account->value += (int) $request->value;
+            $msg = ' added ' . $request->value;
         } else {
-            if(!$request->confirm && (int) $request->remValue > 1000) {
+            if(!$request->confirm && (int) $request->value > 1000) {
                 return redirect()
                 ->back()
                 ->with('oper-modal', [
                     'The operation value exeds 1000. Do Your really perform operation?',
-                    $account->id,
-                    $request->addValue,
+                    $request->account_id,
+                    $request->value,
                     "Rem",
                 ]);
             };
-            if($request->remValue > $client->value) {
+            if($request->value > $account->value) {
                     $request->flash();
                     return redirect()
                         ->back()
                         ->withErrors('Insufficient funds to perform the operation');
                 }
-                $client->value -= $request->remValue;
-                $msg = ' subtract ' . $request->remValue;
+                $account->value -= (int) $request->value;
+                $msg = ' subtract ' . $request->value;
             }
         $account->save();
         return redirect()

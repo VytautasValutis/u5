@@ -41,7 +41,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fs-4 w-auto">The amount of remove feed</label>
-                            <input type="text" class="form-control w-50 d-inline-block float-end" name="remValue" value="0">
+                            <input type="text" class="form-control w-50 d-inline-block float-end" name="value" value="0">
                         </div>
                         <input type="hidden" name="oper" value="Rem">
                         <button type="submit" class="btn btn-primary ms-4">Submit</button>
