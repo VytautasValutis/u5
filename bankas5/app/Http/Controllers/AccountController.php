@@ -51,8 +51,9 @@ class AccountController extends Controller
             'client' => $client,
             'accounts' => $accounts,
         ]);
-        if($oper == 'Rem') return view('accounts.remVal', [
-            'client' => $client
+        if($oper == 'Rem') return view('accounts.remFunds', [
+            'client' => $client,
+            'accounts' => $accounts,
         ]);
         return redirect()->back();
     }
@@ -74,14 +75,24 @@ class AccountController extends Controller
             $account->value += (int) $request->addValue;
             $msg = ' added ' . $request->addValue;
         } else {
-            // if($request->remValue > $client->value) {
-                //     $request->flash();
-                //     return redirect()
-                //         ->back()
-                //         ->withErrors('Insufficient funds to perform the operation');
-                // }
-                // $client->value -= $request->remValue;
-                // $msg = ' subtract ' . $request->remValue;
+            if(!$request->confirm && (int) $request->remValue > 1000) {
+                return redirect()
+                ->back()
+                ->with('oper-modal', [
+                    'The operation value exeds 1000. Do Your really perform operation?',
+                    $account->id,
+                    $request->addValue,
+                    "Rem",
+                ]);
+            };
+            if($request->remValue > $client->value) {
+                    $request->flash();
+                    return redirect()
+                        ->back()
+                        ->withErrors('Insufficient funds to perform the operation');
+                }
+                $client->value -= $request->remValue;
+                $msg = ' subtract ' . $request->remValue;
             }
         $account->save();
         return redirect()
