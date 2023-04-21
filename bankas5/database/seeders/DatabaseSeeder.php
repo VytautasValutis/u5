@@ -68,15 +68,8 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123'),
         ]);
         $faker = Faker::create('lt_LT');
+        $accCount = [];
         foreach(range(1, 50) as $_) {
-            DB::table('clients')->insert([
-                'name' => $faker->firstName,
-                'surname' => $faker->lastName,
-                'pid' => self::putRandCode(),
-            ]);
-        }
-        $iban_time = time();
-        foreach(range(1, 50) as $i) {
             $key_prob = rand(1, 100);
             $acc_num = match(true) {
                 $key_prob < 6 => 0,
@@ -84,7 +77,17 @@ class DatabaseSeeder extends Seeder
                 $key_prob < 86 => 2,
                 default => 3,
             };
-            foreach(range(1, $acc_num) as $_) {
+            $accCount[] = $acc_num;
+            DB::table('clients')->insert([
+                'name' => $faker->firstName,
+                'surname' => $faker->lastName,
+                'pid' => self::putRandCode(),
+                'accCount' => $acc_num,
+            ]);
+        }
+        $iban_time = time();
+        foreach(range(1, 50) as $i) {
+            foreach(range(1, $accCount[$i - 1]) as $_) {
                 $key_val = rand(1, 100);
                 $value = match(true) {
                     $key_val < 11 => 0,

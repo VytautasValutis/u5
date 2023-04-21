@@ -58,6 +58,38 @@
                                 </a>
                             </div>
                         </li>
+                        <li>
+                            <form action="" method="post">
+                                <div class="container">
+                                    <div class="row justify-content-left">
+                                        <div class="col-5 m-1">
+                                            <select class="form-select" name="filter">
+                                                <option value="0" selected>Filters select</option>
+                                                <option value="1">Clients w zero accounts</option>
+                                                <option value="2">Accounts w positive balanse</option>
+                                                <option value="3">Accounts w zero balanse</option>
+                                                <option value="4">Accounts w negative balanse</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-5 m-1">
+                                            <button type="submit" class="btn btn-outline-primary">Confirm filter</button>
+                                            @csrf
+                                            @method('put')
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                        <div class="col-2 m-1">
+                            <form action="" method="post">
+                                <input type="hidden" value="{{$v->clientSum}}" name="clientSum">
+                                <button type="submit" class="btn btn-outline-danger">Bank taxes</button>
+                                @csrf
+                                @method('put')
+                            </form>
+                        </div>
+                        <li>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
