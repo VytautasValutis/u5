@@ -61,23 +61,28 @@ class AccountController extends Controller
     {
         $account  = Account::where('id', $request->account_id)->get()->first();
         if($request->oper == "Add") {
-            if((int) $request->addValue > 1000) {
+            if(!$request->confirm && (int) $request->addValue > 1000) {
                 return redirect()
                 ->back()
-                ->with('oper-modal', ['The operation value exedds 1000. Do Your really perform operation?']);
+                ->with('oper-modal', [
+                    'The operation value exeds 1000. Do Your really perform operation?',
+                    $account->id,
+                    $request->addValue,
+                    "Add",
+                ]);
             };
             $account->value += (int) $request->addValue;
             $msg = ' added ' . $request->addValue;
         } else {
             // if($request->remValue > $client->value) {
-            //     $request->flash();
-            //     return redirect()
-            //         ->back()
-            //         ->withErrors('Insufficient funds to perform the operation');
-            // }
-            // $client->value -= $request->remValue;
-            // $msg = ' subtract ' . $request->remValue;
-        }
+                //     $request->flash();
+                //     return redirect()
+                //         ->back()
+                //         ->withErrors('Insufficient funds to perform the operation');
+                // }
+                // $client->value -= $request->remValue;
+                // $msg = ' subtract ' . $request->remValue;
+            }
         $account->save();
         return redirect()
             ->back()
