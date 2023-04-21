@@ -10,11 +10,6 @@ use Illuminate\Validation\Validator as VV;
 
 class ClientController extends Controller
 {
-    private function accNr() : string
-    {
-        $sask_nr = 'LT3306660' . sprintf('%1$011d', time());
-        return $sask_nr;
-    }
 
     private function putRandCode() : string
     {
@@ -152,8 +147,7 @@ class ClientController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
             'surname' => 'required|min:3',
-            // 'pid' => 'unique:App\Models\Client,pid',
-            'pid' => 'required',
+            'pid' => 'required|unique:App\Models\Client,pid',
         ]);
 
         $validator->after(function(VV $validator) {

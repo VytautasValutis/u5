@@ -16,7 +16,7 @@
                             </div>
                             <div class="col-4 mt-1">
                                 <form action="{{route('accounts-store')}}" method="post">
-                                    <input type="hidden" value="{{$client->id}}" name="clientId">
+                                    <input type="hidden" value="{{$client->id}}" name="client_id">
                                     <button type="submit" class="btn btn-primary ms-4">Add new account</button>
                                     @csrf
                                     @method('put')
