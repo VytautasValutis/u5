@@ -81,12 +81,7 @@
                             </form>
                         </li>
                         <div class="col-2 m-1">
-                            <form action="" method="post">
-                                <input type="hidden" value="{{$v->clientSum}}" name="clientSum">
-                                <button type="submit" class="btn btn-outline-danger">Bank taxes</button>
-                                @csrf
-                                @method('put')
-                            </form>
+                                <a href="{{route('accounts-taxes')}}" class="btn btn-outline-danger">Bank taxes</a>
                         </div>
                         <li>
                         </li>

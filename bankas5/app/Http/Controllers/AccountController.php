@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 
 class AccountController extends Controller
@@ -42,6 +43,21 @@ class AccountController extends Controller
     public function show(Account $account)
     {
             //
+    }
+
+    public function taxes(Account $account)
+    {
+        $acc = Account::where('id', '>', 0)->get();
+        $acc = $acc->unique('client_id')->all();
+        $count = count($acc);
+        foreach($acc as $ac){
+            $ac->value -= 5;
+            $ac->save();
+        }
+        return redirect()
+        ->back()
+        ->with('ok', 'Fees have been deducted ' . $count . ' accounts');
+        ;
     }
 
     public function edit($oper, Client $client)
