@@ -8,7 +8,7 @@
                 <div class="card-header">
                     <div class="container">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-6">
                                 <h1>Add funds</h1>
                             </div>
                             <div class="col-4">

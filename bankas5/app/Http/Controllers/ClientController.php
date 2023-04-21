@@ -147,8 +147,7 @@ class ClientController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
             'surname' => 'required|min:3',
-            // 'pid' => 'unique:App\Models\Client,pid',
-            'pid' => 'required',
+            'pid' => 'required|unique:App\Models\Client,pid',
         ]);
 
         $validator->after(function(VV $validator) {
