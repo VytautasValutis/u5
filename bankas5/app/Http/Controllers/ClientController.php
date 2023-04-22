@@ -10,6 +10,11 @@ use Illuminate\Validation\Validator as VV;
 
 class ClientController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
 
     private function putRandCode() : string
     {

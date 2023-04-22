@@ -10,9 +10,23 @@ use Illuminate\Support\Collection;
 
 class AccountController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    
     public function index()
     {
-        //
+        $clients = Client::all();
+        $accounts = Account::where('id', '>', '0');
+        $accounts = $accounts->orderBy('iban');
+        $accounts = $accounts->paginate(11)->withQueryString();
+        return view('accounts.index', [
+            'clients' => $clients,
+            'accounts' => $accounts,
+        ]);
+
     }
 
     public function create()
@@ -45,23 +59,21 @@ class AccountController extends Controller
             //
     }
 
-    public function taxes(Account $account)
-    {
-        $acc = Account::where('id', '>', 0)->get();
-        $acc = $acc->unique('client_id')->all();
-        $count = count($acc);
-        foreach($acc as $ac){
-            $ac->value -= 5;
-            $ac->save();
-        }
-        return redirect()
-        ->back()
-        ->with('ok', 'Fees have been deducted ' . $count . ' accounts');
-        ;
-    }
-
     public function edit($oper, Client $client)
     {
+        if($oper == 'Taxes') {
+            $acc = Account::where('id', '>', 0)->get();
+            $acc = $acc->unique('client_id')->all();
+            $count = count($acc);
+            foreach($acc as $ac){
+                $ac->value -= 5;
+                $ac->save();
+            }
+            return redirect()
+            ->back()
+            ->with('ok', 'Fees have been deducted ' . $count . ' accounts');
+            ;
+        }
         $accounts = Account::where('client_id', $client->id)->get();
         if($oper == 'Add') return view('accounts.addFunds', [
             'client' => $client,
@@ -78,7 +90,7 @@ class AccountController extends Controller
     {
         $account  = Account::where('id', $request->account_id)->get()->first();
         if($request->oper == "Add") {
-            if(!$request->confirm && (int) $request->value > 1000) {
+            if(!$request->confirm && (float) $request->value > 1000) {
                 return redirect()
                 ->back()
                 ->with('oper-modal', [
@@ -88,10 +100,10 @@ class AccountController extends Controller
                     "Add",
                 ]);
             };
-            $account->value += (int) $request->value;
+            $account->value += (float) $request->value;
             $msg = ' added ' . $request->value;
         } else {
-            if(!$request->confirm && (int) $request->value > 1000) {
+            if(!$request->confirm && (float) $request->value > 1000) {
                 return redirect()
                 ->back()
                 ->with('oper-modal', [
@@ -107,7 +119,7 @@ class AccountController extends Controller
                         ->back()
                         ->withErrors('Insufficient funds to perform the operation');
                 }
-                $account->value -= (int) $request->value;
+                $account->value -= (float) $request->value;
                 $msg = ' subtract ' . $request->value;
             }
         $account->save();
