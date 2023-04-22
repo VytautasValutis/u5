@@ -20,13 +20,13 @@
                     <td>{{$clients->where('id', $acc->client_id)->first()->name}}</td>
                     <td>{{$clients->where('id', $acc->client_id)->first()->surname}}</td>
                     <td>
-                        <a href="" class="btn btn-outline-success">Add funds</a>
+                        <a href="{{route('accounts-edit', ['Add', $acc->client_id, $acc->id])}}" class="btn btn-outline-success">Add funds</a>
                     </td>
                     <td>
-                        <a href="" class="btn btn-outline-primary">Deduct funds</a>
+                        <a href="{{route('accounts-edit', ['Rem', $acc->client_id, $acc->id])}}" class="btn btn-outline-primary">Deduct funds</a>
                     </td>
                     <td>
-                        <form action="" method="post">
+                        <form action="{{route('accounts-delete', $acc)}}" method="post">
                             <button type="submit" class="btn btn-outline-danger">Remove account</button>
                             @csrf
                             @method('delete')

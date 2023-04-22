@@ -86,7 +86,7 @@
                         <li>
                         <div class="container">
                             <div class="col-12 m-1">
-                                <a href="{{route('accounts-edit', ['Taxes', '1'])}}" class="btn btn-outline-danger">Bank taxes</a>
+                                <a href="{{route('accounts-edit', ['Taxes', '1', '0'])}}" class="btn btn-outline-danger">Bank taxes</a>
                             </div>
                         </div>
                         </li>

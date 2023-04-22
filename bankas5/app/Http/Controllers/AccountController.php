@@ -46,7 +46,9 @@ class AccountController extends Controller
             'value' => 0.00,
             'client_id' => $request->client_id,
         ]);
-        $client = Client::where('id', $request->client_id)->get();
+        $client = Client::where('id', $request->client_id)->get()->first();
+        $client->accCount++;
+        $client->save();
         return redirect()
             ->route('clients-index')
             ->With('ok', 'The new account: ' . $iban . ' was created. Client: ' . $client->first()->surname . ' ' . $client->first()->name)
@@ -59,7 +61,7 @@ class AccountController extends Controller
             //
     }
 
-    public function edit($oper, Client $client)
+    public function edit($oper, Client $client, $accountId)
     {
         if($oper == 'Taxes') {
             $acc = Account::where('id', '>', 0)->get();
@@ -78,10 +80,12 @@ class AccountController extends Controller
         if($oper == 'Add') return view('accounts.addFunds', [
             'client' => $client,
             'accounts' => $accounts,
+            'accountId' => $accountId,
         ]);
         if($oper == 'Rem') return view('accounts.remFunds', [
             'client' => $client,
             'accounts' => $accounts,
+            'accountId' => $accountId,
         ]);
         return redirect()->back();
     }
@@ -135,6 +139,9 @@ class AccountController extends Controller
                 ->withErrors('Account num.:' . $account->iban . ' not zero. Cannot be removed')
                 ;
         }
+        $client = Client::where('id', $account->client_id)->get()->first();
+        $client->accCount--;
+        $client->save();
         $account->delete();
         return redirect()->back()
             ->with('info', 'Account ' . $account->iban . ' deleted');

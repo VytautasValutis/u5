@@ -36,8 +36,8 @@ Route::prefix('clients')->name('clients-')->group(function() {
 Route::prefix('accounts')->name('accounts-')->group(function() {
     Route::get('/', [AC::class, 'index'])->name('index');
     Route::get('/create', [AC::class, 'create'])->name('create');
-    Route::post('/create', [AC::class, 'store'])->name('store');    
-    Route::get('/edit/{oper}/{client}', [AC::class, 'edit'])->name('edit');
+    Route::put('/create', [AC::class, 'store'])->name('store');    
+    Route::get('/edit/{oper}/{client}/{accountId}', [AC::class, 'edit'])->name('edit');
     Route::put('/edit', [AC::class, 'update'])->name('update');
     Route::delete('/delete/{account}', [AC::class, 'destroy'])->name('delete');
 });
