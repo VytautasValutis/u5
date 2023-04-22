@@ -10,6 +10,11 @@ use Illuminate\Validation\Validator as VV;
 
 class ClientController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
 
     private function putRandCode() : string
     {
@@ -108,8 +113,13 @@ class ClientController extends Controller
     }
 
     public function index(Request $request)
-    {
-        $clients = Client::where('id', '>', '0');
+    {   
+        $request->session()->put('filterMenuType', 1);
+        if($request->filterC) {
+            $clients = Client::where('accCount', '0');
+        } else {
+            $clients = Client::where('id', '>', '0');
+        }
         $clients = $clients->orderBy('surname');
         $clients = $clients->paginate(5)->withQueryString();
         foreach($clients as $c) {
@@ -137,6 +147,8 @@ class ClientController extends Controller
 
     public function create()
     {
+        session()->put('filterMenuType', 0);
+
         session(['pid' => self::putRandCode()]);
 
         return view('clients.create');
@@ -144,6 +156,8 @@ class ClientController extends Controller
 
     public function store(Request $request)
     {
+        session()->put('filterMenuType', 0);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
             'surname' => 'required|min:3',
@@ -168,6 +182,7 @@ class ClientController extends Controller
         $client->name = $request->name;
         $client->surname = $request->surname;
         $client->pid = $request->pid;
+        $client->accCount = 0;
         $client->save();
         return redirect()
             ->route('clients-index')
@@ -182,6 +197,8 @@ class ClientController extends Controller
 
     public function edit(Client $client)
     {
+        session()->put('filterMenuType', 0);
+
         $clientAccounts = Account::where('client_id', $client->id);
         $clientAccounts = $clientAccounts->get();
 
@@ -193,6 +210,8 @@ class ClientController extends Controller
 
     public function update(Request $request, Client $client)
     {
+        session()->put('filterMenuType', 0);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
             'surname' => 'required|min:3',
@@ -217,12 +236,17 @@ class ClientController extends Controller
 
     }
 
-    public function destroy(Request $request, Client $client)
+    public function destroy(Client $client)
     {
-        if($request->clientSum > 0) {
-            return redirect()
-            ->back()
-            ->withErrors('Client: ' . $client->name . ' ' . $client->surname .' has values. Cannot be removed');
+        session()->put('filterMenuType', 0);
+
+        $clientAccounts = Account::where('client_id', $client->id)->get();
+        foreach($clientAccounts as $clientAccount) {
+            if($clientAccount->value != 0) {
+                return redirect()
+                ->back()
+                ->withErrors('Client: ' . $client->name . ' ' . $client->surname .' has values. Cannot be removed');
+            }
         }
 
         $client->delete();

@@ -30,9 +30,9 @@
                         <div class="mb-3">
                             <label class="form-label fs-4">Client accounts</label>
                             <select class="form-select" name="account_id">
-                                <option value="0">Accounts list</option>
                                 @foreach($accounts as $account)
-                                <option value="{{$account->id}}">
+                                <option value="{{$account->id}}"
+                                @if((int) $accountId > 0 && (int) $accountId == $account->id) selected @endif>
                                     {{$account->iban}} ==> &#x20AC; {{$account->value}}
                                 </option>
                                 @endforeach
