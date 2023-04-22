@@ -6,7 +6,8 @@ use App\Models\Account;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Validator as VV;
 
 class AccountController extends Controller
 {
@@ -64,7 +65,7 @@ class AccountController extends Controller
         $client->save();
         return redirect()
             ->route('clients-index')
-            ->With('ok', 'The new account: ' . $iban . ' was created. Client: ' . $client->first()->surname . ' ' . $client->first()->name)
+            ->With('ok', 'The new account: ' . $iban . ' was created. Client: ' . $client->surname . ' ' . $client->name)
             ;
 
     }
@@ -108,6 +109,22 @@ class AccountController extends Controller
     public function update(Request $request)
     {
         session()->put('filterMenuType', 0);
+
+        $validator = Validator::make($request->all(), [
+            'value' => 'required|decimal:0,2',
+        ]);
+        $validator->after(function(VV $validator) {
+            $temp = $validator->safe()->value;
+            if($temp < 0) {
+                $validator->errors()->add('Error', 'Value less than zero');
+            }
+        });
+        if($validator->fails()) {
+            $request->flash();
+            return redirect()
+                ->back()
+                ->withErrors($validator);
+        }
 
         $account  = Account::where('id', $request->account_id)->get()->first();
         if($request->oper == "Add") {
