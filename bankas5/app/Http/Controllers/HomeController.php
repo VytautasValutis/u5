@@ -25,6 +25,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+        session()->put('filterMenuType', 0);
+
         $clients =  Client::all();
         $accounts =  Account::all();
 

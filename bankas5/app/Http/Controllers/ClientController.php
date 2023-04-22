@@ -115,7 +115,11 @@ class ClientController extends Controller
     public function index(Request $request)
     {   
         $request->session()->put('filterMenuType', 1);
-        $clients = Client::where('id', '>', '0');
+        if($request->filterC) {
+            $clients = Client::where('accCount', '0');
+        } else {
+            $clients = Client::where('id', '>', '0');
+        }
         $clients = $clients->orderBy('surname');
         $clients = $clients->paginate(5)->withQueryString();
         foreach($clients as $c) {
