@@ -63,7 +63,7 @@
                         </li>
                         @if(Session::get('filterMenuType') === 2)
                         <li>
-                            <form action="" method="post">
+                            <form action="{{route('accounts-index')}}" method="get">
                                 <div class="container">
                                     <div class="row justify-content-left">
                                         <div class="col-8 m-1">
@@ -76,8 +76,6 @@
                                         </div>
                                         <div class="col-3 m-1">
                                             <button type="submit" class="btn btn-outline-primary">Filter</button>
-                                            @csrf
-                                            @method('put')
                                         </div>
                                     </div>
                                 </div>
@@ -86,7 +84,7 @@
                         @endif
                         @if(Session::get('filterMenuType') === 1)
                         <li>
-                            <form action="" method="get">
+                            <form action="{{route('clients-index')}}" method="get">
                                 <div class="container">
                                     <div class="row justify-content-left">
                                         <div class="col-8 m-1">

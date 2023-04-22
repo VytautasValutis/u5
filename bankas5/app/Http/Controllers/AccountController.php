@@ -22,7 +22,13 @@ class AccountController extends Controller
     {
         $request->session()->put('filterMenuType', 2);
         $clients = Client::all();
-        $accounts = Account::where('id', '>', '0');
+        $filterA = $request->filterA ?? 0;
+        $accounts = match($filterA) {
+            '1' => Account::where('value', '>', '0'),
+            '2' => Account::where('value', '0'),
+            '3' => Account::where('value', '<', '0'),
+            default => Account::where('id', '>', '0')
+        };
         $accounts = $accounts->orderBy('iban');
         $accounts = $accounts->paginate(11)->withQueryString();
         return view('accounts.index', [
