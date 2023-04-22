@@ -113,7 +113,8 @@ class ClientController extends Controller
     }
 
     public function index(Request $request)
-    {
+    {   
+        $request->session()->put('filterMenuType', 1);
         $clients = Client::where('id', '>', '0');
         $clients = $clients->orderBy('surname');
         $clients = $clients->paginate(5)->withQueryString();
@@ -142,6 +143,8 @@ class ClientController extends Controller
 
     public function create()
     {
+        session()->put('filterMenuType', 0);
+
         session(['pid' => self::putRandCode()]);
 
         return view('clients.create');
@@ -149,6 +152,8 @@ class ClientController extends Controller
 
     public function store(Request $request)
     {
+        session()->put('filterMenuType', 0);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
             'surname' => 'required|min:3',
@@ -188,6 +193,8 @@ class ClientController extends Controller
 
     public function edit(Client $client)
     {
+        session()->put('filterMenuType', 0);
+
         $clientAccounts = Account::where('client_id', $client->id);
         $clientAccounts = $clientAccounts->get();
 
@@ -199,6 +206,8 @@ class ClientController extends Controller
 
     public function update(Request $request, Client $client)
     {
+        session()->put('filterMenuType', 0);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
             'surname' => 'required|min:3',
@@ -225,6 +234,8 @@ class ClientController extends Controller
 
     public function destroy(Client $client)
     {
+        session()->put('filterMenuType', 0);
+
         $clientAccounts = Account::where('client_id', $client->id)->get();
         foreach($clientAccounts as $clientAccount) {
             if($clientAccount->value != 0) {

@@ -13,11 +13,14 @@ class AccountController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        session('filterMenuType', 0);
+
     }
 
     
-    public function index()
+    public function index(Request $request)
     {
+        $request->session()->put('filterMenuType', 2);
         $clients = Client::all();
         $accounts = Account::where('id', '>', '0');
         $accounts = $accounts->orderBy('iban');
@@ -31,6 +34,8 @@ class AccountController extends Controller
 
     public function create()
     {
+        session()->put('filterMenuType', 0);
+
         $clients = Client::all()->sortBy('surname');
         return view('accounts.create', [
             'clients' => $clients,
@@ -40,6 +45,8 @@ class AccountController extends Controller
 
     public function store(Request $request)
     {
+        session()->put('filterMenuType', 0);
+
         $iban = $request->iban ?? 'LT3306660' . sprintf('%1$011d', time());
         Account::create([
             'iban' => $iban,
@@ -63,6 +70,8 @@ class AccountController extends Controller
 
     public function edit($oper, Client $client, $accountId)
     {
+        session()->put('filterMenuType', 0);
+
         if($oper == 'Taxes') {
             $acc = Account::where('id', '>', 0)->get();
             $acc = $acc->unique('client_id')->all();
@@ -92,6 +101,8 @@ class AccountController extends Controller
 
     public function update(Request $request)
     {
+        session()->put('filterMenuType', 0);
+
         $account  = Account::where('id', $request->account_id)->get()->first();
         if($request->oper == "Add") {
             if(!$request->confirm && (float) $request->value > 1000) {
@@ -134,6 +145,8 @@ class AccountController extends Controller
 
     public function destroy(Account $account)
     {
+        session()->put('filterMenuType', 0);
+
         if($account->value != 0) {
             return redirect()->back()
                 ->withErrors('Account num.:' . $account->iban . ' not zero. Cannot be removed')
