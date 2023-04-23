@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Validator as VV;
+use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
@@ -73,6 +74,14 @@ class AccountController extends Controller
     public function show(Account $account)
     {
             //
+    }
+
+    public function transfer(Request $request)
+    {
+            $lists = Account::join('clients','clients.id','=','accounts.client_id')
+                ->get();
+            dump($lists);
+            die;
     }
 
     public function edit($oper, Client $client, $accountId)

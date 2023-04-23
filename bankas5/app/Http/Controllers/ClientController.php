@@ -179,14 +179,14 @@ class ClientController extends Controller
         }
 
         $client = new Client;
-        $client->name = $request->name;
-        $client->surname = $request->surname;
+        $client->name = ucfirst($request->name);
+        $client->surname = ucfirst($request->surname);
         $client->pid = $request->pid;
         $client->accCount = 0;
         $client->save();
         return redirect()
             ->route('clients-index')
-            ->with('ok', 'Client :' . $request->name . ' ' . $request->surname . ' was created');
+            ->with('ok', 'Client :' . ucfirst($request->name) . ' ' . ucfirst($request->surname) . ' was created');
 
     }
 
@@ -225,12 +225,12 @@ class ClientController extends Controller
                 ;
         }
 
-        $client->name = $request->name;
-        $client->surname = $request->surname;
+        $client->name = ucfirst($request->name);
+        $client->surname = ucFirst($request->surname);
         $client->save();
         return redirect()
             ->route('clients-index', $request->session()->get('last-client-view', []))
-            ->With('ok', 'The client ' . $request->name . ' ' . $request->surname . ' was updated')
+            ->With('ok', 'The client ' . ucfirst($request->name) . ' ' . ucfirst($request->surname) . ' was updated')
             ->with('light-up', $client->id)
             ;
 
