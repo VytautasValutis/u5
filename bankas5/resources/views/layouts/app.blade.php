@@ -111,7 +111,7 @@
                         <li>
                             <div class="container">
                                 <div class="col-12 m-1">
-                                    <a href="{{route('accounts-edit', ['Taxes', '1', '0'])}}" class="btn btn-outline-danger">Transfer funds</a>
+                                    <a href="{{route('accounts-transfer')}}" class="btn btn-outline-danger">Transfer funds</a>
                                 </div>
                             </div>
                         </li>

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Validator as VV;
+use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
@@ -75,6 +76,24 @@ class AccountController extends Controller
             //
     }
 
+    public function transfer(Request $request)
+    {
+        session()->put('filterMenuType', 0);
+        $fromAcc = session('from_acc') ?? '';
+        $toAcc = session('to_acc') ?? '';
+
+        $accounts = Account::all();
+        $lists = Client::join('Accounts','clients.id','=','accounts.client_id');
+        $lists = $lists->orderBy('surname');
+        $lists = $lists->get();
+
+            return view('accounts.transfer', [
+                'lists' => $lists,
+                'fromAcc' => $fromAcc,
+                'toAcc' => $toAcc,
+            ]);
+        }
+
     public function edit($oper, Client $client, $accountId)
     {
         session()->put('filterMenuType', 0);
@@ -110,6 +129,14 @@ class AccountController extends Controller
     {
         session()->put('filterMenuType', 0);
 
+        if($request->oper == 'modal') {
+            $request->request->set('oper', session('oper'));
+            $request->request->set('value', session('value'));
+            $request->request->set('account_id', session('account_id'));
+            $request->request->set('from_acc', session('from_acc'));
+            $request->request->set('to_acc', session('to_acc'));
+        }
+
         $validator = Validator::make($request->all(), [
             'value' => 'required|decimal:0,2',
         ]);
@@ -125,30 +152,64 @@ class AccountController extends Controller
                 ->back()
                 ->withErrors($validator);
         }
+        if($request->oper == "Transfer") {
+            if($request->from_acc == $request->to_acc) {
+                return redirect()
+                ->back()
+                ->withErrors('Illegal transfer: from and to accounts match');
+            }
+            $accountFr  = Account::where('id', $request->from_acc)->get()->first();
+            $accountTo  = Account::where('id', $request->to_acc)->get()->first();
 
-        $account  = Account::where('id', $request->account_id)->get()->first();
-        if($request->oper == "Add") {
+            if($request->value > $accountFr->value) {
+                $request->flash();
+                return redirect()
+                    ->back()
+                    ->withErrors('Insufficient funds to perform the operation');
+                }
+                session(['from_acc' => $request->from_acc]);
+                session(['to_acc' => $request->to_acc]);
             if(!$request->confirm && (float) $request->value > 1000) {
+                session(['value' => $request->value]);
+                session(['oper' => $request->oper]);
                 return redirect()
                 ->back()
                 ->with('oper-modal', [
                     'The operation value exeds 1000. Do Your really perform operation?',
-                    $request->account_id,
-                    $request->value,
-                    "Add",
+                ]);
+            };
+            $accountFr->value -= (float) $request->value;
+            $accountFr->save();
+            $accountTo->value += (float) $request->value;
+            $accountTo->save();
+            return redirect()
+            ->back()
+            ->with('ok', 'Transfer successful from: ' . $accountFr->iban . '  to  ' . $accountTo->iban . ' ==> ' . $request->value . '  values');
+        }
+
+        $account  = Account::where('id', $request->account_id)->get()->first();
+        if($request->oper == "Add") {
+            if(!$request->confirm && (float) $request->value > 1000) {
+                session(['account_id' => $request->account_id]);
+                session(['value' => $request->value]);
+                session(['oper' => $request->oper]);
+                return redirect()
+                ->back()
+                ->with('oper-modal', [
+                    'The operation value exeds 1000. Do Your really perform operation?',
                 ]);
             };
             $account->value += (float) $request->value;
             $msg = ' added ' . $request->value;
         } else {
             if(!$request->confirm && (float) $request->value > 1000) {
+                session(['account_id' => $request->account_id]);
+                session(['value' => $request->value]);
+                session(['oper' => $request->oper]);
                 return redirect()
                 ->back()
                 ->with('oper-modal', [
                     'The operation value exeds 1000. Do Your really perform operation?',
-                    $request->account_id,
-                    $request->value,
-                    "Rem",
                 ]);
             };
             if($request->value > $account->value) {
