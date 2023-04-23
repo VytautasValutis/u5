@@ -13,9 +13,7 @@
                 <form action="{{route('accounts-update')}}" method="post">
                     <button type="submit" class="btn btn-danger">Yes</button>
                     <input type="hidden" value="1" name="confirm">
-                    <input type="hidden" value="{{ Session::get('oper-modal')[1] }}" name="account_id">
-                    <input type="hidden" value="{{ Session::get('oper-modal')[2] }}" name="value">
-                    <input type="hidden" value="{{ Session::get('oper-modal')[3] }}" name="oper">
+                    <input type="hidden" value="modal" name="oper">
                     @csrf
                     @method('put')
                 </form>
