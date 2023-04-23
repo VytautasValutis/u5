@@ -80,13 +80,13 @@ class AccountController extends Controller
     {
         session()->put('filterMenuType', 0);
 
-        $lists = Account::join('clients','clients.id','=','accounts.client_id');
-
+        $accounts = Account::all();
+        $lists = Client::join('Accounts','clients.id','=','accounts.client_id');
         $lists = $lists->orderBy('surname');
         $lists = $lists->get();
 
             return view('accounts.transfer', [
-                'lists' => $lists
+                'lists' => $lists,
             ]);
         }
 
@@ -126,11 +126,11 @@ class AccountController extends Controller
         session()->put('filterMenuType', 0);
 
         if($request->oper == 'modal') {
-            $request->request->set('oper', Session::get('oper'));
-            $request->request->set('value', Session::get('value'));
-            $request->request->set('account_id', Session::get('account_id'));
-            $request->request->set('from_acc', Session::get('from_acc'));
-            $request->request->set('to_acc', Session::get('to_acc'));
+            $request->request->set('oper', session('oper'));
+            $request->request->set('value', session('value'));
+            $request->request->set('account_id', session('account_id'));
+            $request->request->set('from_acc', session('from_acc'));
+            $request->request->set('to_acc', session('to_acc'));
         }
 
         $validator = Validator::make($request->all(), [
@@ -164,10 +164,10 @@ class AccountController extends Controller
                     ->withErrors('Insufficient funds to perform the operation');
             }
             if(!$request->confirm && (float) $request->value > 1000) {
-                session->put('from_acc', $request->account_id);
-                session->put('to_acc', $request->account_id);
-                session->put('value', $request->value);
-                session->put('oper', $request->oper);
+                session(['from_acc' => $request->from_acc]);
+                session(['to_acc' => $request->to_acc]);
+                session(['value' => $request->value]);
+                session(['oper' => $request->oper]);
                 return redirect()
                 ->back()
                 ->with('oper-modal', [
@@ -180,15 +180,15 @@ class AccountController extends Controller
             $accountTo->save();
             return redirect()
             ->back()
-            ->with('ok', 'Trasfer successful from: ' . $accountFr->iban . 'to' . $accountFr->iban . ' ' . $request->value . ' values');
+            ->with('ok', 'Transfer successful from: ' . $accountFr->iban . '  to  ' . $accountTo->iban . ' ' . $request->value . '  values');
         }
 
         $account  = Account::where('id', $request->account_id)->get()->first();
         if($request->oper == "Add") {
             if(!$request->confirm && (float) $request->value > 1000) {
-                session->put('account_id', $request->account_id);
-                session->put('value', $request->value);
-                session->put('oper', $request->oper);
+                session(['account_id' => $request->account_id]);
+                session(['value' => $request->value]);
+                session(['oper' => $request->oper]);
                 return redirect()
                 ->back()
                 ->with('oper-modal', [
@@ -199,9 +199,9 @@ class AccountController extends Controller
             $msg = ' added ' . $request->value;
         } else {
             if(!$request->confirm && (float) $request->value > 1000) {
-                session->put('account_id', $request->account_id);
-                session->put('value', $request->value);
-                session->put('oper', $request->oper);
+                session(['account_id' => $request->account_id]);
+                session(['value' => $request->value]);
+                session(['oper' => $request->oper]);
                 return redirect()
                 ->back()
                 ->with('oper-modal', [

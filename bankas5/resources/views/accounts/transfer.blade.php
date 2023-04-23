@@ -11,26 +11,27 @@
                 <div class="card-body">
                     <form action="{{route('accounts-update')}}" method="post">
                         <div class="mb-3">
-                            <label class="form-label fs-4">Transfer from accounts</label>
+                            <label class="form-label fs-4">Transfer to accounts</label>
                             <select class="form-select" name="from_acc">
                                 @foreach($lists as $list)
                                 <option value="{{$list->id}}">
-                                    {{$list->surname}}  {{$list->name}}  {{$list->iban}} ==> &#x20AC; {{$list->value}}
-                                </option>
-                                @endforeach
-                            </select>
-                            <div class="form-text">Please select account</div>
-                        <div class="mb-3">
-                            <label class="form-label fs-4">Transfer to accounts</label>
-                            <select class="form-select" name="to_acc">
-                                @foreach($lists as $list)
-                                <option value="{{$list->id}}">
-                                    {{$list->surname}}  {{$list->name}}  {{$list->iban}} ==> &#x20AC; {{$list->value}}
+                                    {{$list->surname}} {{$list->name}} {{$list->iban}} ==> &#x20AC; {{$list->value}}
                                 </option>
                                 @endforeach
                             </select>
                             <div class="form-text">Please select account</div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label fs-4">Transfer from accounts</label>
+                            <select class="form-select" name="to_acc">
+                                @foreach($lists as $list)
+                                <option value="{{$list->id}}">
+                                    {{$list->surname}} {{$list->name}} {{$list->iban}} ==> &#x20AC; {{$list->value}}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-text">Please select account</div>
                         <div class="mb-3">
                             <label class="form-label fs-4 w-auto">The amount of transfer feed</label>
                             <input type="text" class="form-control w-50 d-inline-block float-end" name="value" value="0">
