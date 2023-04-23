@@ -11,10 +11,10 @@
                 <div class="card-body">
                     <form action="{{route('accounts-update')}}" method="post">
                         <div class="mb-3">
-                            <label class="form-label fs-4">Transfer to accounts</label>
+                            <label class="form-label fs-4">Transfer from accounts</label>
                             <select class="form-select" name="from_acc">
                                 @foreach($lists as $list)
-                                <option value="{{$list->id}}">
+                                <option value="{{$list->id}}" @if($list->id === (int) $fromAcc) selected @endif>
                                     {{$list->surname}} {{$list->name}} {{$list->iban}} ==> &#x20AC; {{$list->value}}
                                 </option>
                                 @endforeach
@@ -22,10 +22,10 @@
                             <div class="form-text">Please select account</div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fs-4">Transfer from accounts</label>
+                            <label class="form-label fs-4">Transfer to accounts</label>
                             <select class="form-select" name="to_acc">
                                 @foreach($lists as $list)
-                                <option value="{{$list->id}}">
+                                <option value="{{$list->id}}" @if($list->id === (int) $toAcc) selected @endif>
                                     {{$list->surname}} {{$list->name}} {{$list->iban}} ==> &#x20AC; {{$list->value}}
                                 </option>
                                 @endforeach

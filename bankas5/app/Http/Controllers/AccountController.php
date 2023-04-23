@@ -79,6 +79,8 @@ class AccountController extends Controller
     public function transfer(Request $request)
     {
         session()->put('filterMenuType', 0);
+        $fromAcc = session('from_acc') ?? '';
+        $toAcc = session('to_acc') ?? '';
 
         $accounts = Account::all();
         $lists = Client::join('Accounts','clients.id','=','accounts.client_id');
@@ -87,6 +89,8 @@ class AccountController extends Controller
 
             return view('accounts.transfer', [
                 'lists' => $lists,
+                'fromAcc' => $fromAcc,
+                'toAcc' => $toAcc,
             ]);
         }
 
@@ -162,10 +166,10 @@ class AccountController extends Controller
                 return redirect()
                     ->back()
                     ->withErrors('Insufficient funds to perform the operation');
-            }
-            if(!$request->confirm && (float) $request->value > 1000) {
+                }
                 session(['from_acc' => $request->from_acc]);
                 session(['to_acc' => $request->to_acc]);
+            if(!$request->confirm && (float) $request->value > 1000) {
                 session(['value' => $request->value]);
                 session(['oper' => $request->oper]);
                 return redirect()
@@ -180,7 +184,7 @@ class AccountController extends Controller
             $accountTo->save();
             return redirect()
             ->back()
-            ->with('ok', 'Transfer successful from: ' . $accountFr->iban . '  to  ' . $accountTo->iban . ' ' . $request->value . '  values');
+            ->with('ok', 'Transfer successful from: ' . $accountFr->iban . '  to  ' . $accountTo->iban . ' ==> ' . $request->value . '  values');
         }
 
         $account  = Account::where('id', $request->account_id)->get()->first();
